@@ -477,20 +477,23 @@ if(WIN32)
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/qt.conf.win" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/qt.conf"
   )
 
-  string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_LOWER)
+  string(TOLOWER ${CMAKE_BUILD_TYPE} SLIPPI_RUST_BUILD_TYPE)
+  if (SLIPPI_RUST_BUILD_TYPE STREQUAL "relwithdebinfo")
+    set(SLIPPI_RUST_BUILD_TYPE "release")
+  endif()
 
   # Copy Rust DLLs
   add_custom_command(TARGET dolphin-emu POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/cargo/build/x86_64-pc-windows-msvc/${CMAKE_BUILD_TYPE_LOWER}/slippi_rust_extensions.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/slippi_rust_extensions.dll"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/cargo/build/x86_64-pc-windows-msvc/${SLIPPI_RUST_BUILD_TYPE}/slippi_rust_extensions.dll" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/slippi_rust_extensions.dll"
   )
 
   add_custom_command(TARGET dolphin-emu POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/cargo/build/x86_64-pc-windows-msvc/${CMAKE_BUILD_TYPE_LOWER}/slippi_rust_extensions.dll.lib" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/slippi_rust_extensions.dll.lib"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/cargo/build/x86_64-pc-windows-msvc/${SLIPPI_RUST_BUILD_TYPE}/slippi_rust_extensions.dll.lib" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/slippi_rust_extensions.dll.lib"
   )
 
   # Copy Rust PDB (should not go out in releases)
   add_custom_command(TARGET dolphin-emu POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/cargo/build/x86_64-pc-windows-msvc/${CMAKE_BUILD_TYPE_LOWER}/slippi_rust_extensions.pdb" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/slippi_rust_extensions.pdb"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/cargo/build/x86_64-pc-windows-msvc/${SLIPPI_RUST_BUILD_TYPE}/slippi_rust_extensions.pdb" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/slippi_rust_extensions.pdb"
   )
 
   # create portable.txt automatically for Windows since we always use portable builds for dev and release
